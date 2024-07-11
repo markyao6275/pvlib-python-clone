@@ -356,6 +356,57 @@ def _golden_sect_DataFrame(params, lower, upper, func, atol=1e-8):
     """
     if np.any(upper - lower < 0.):
         raise ValueError('upper >= lower is required')
+    
+    # Handle the special case where upper and lower bounds are equal
+    if np.all(upper == lower):
+        func_result = func(params, 'V1')  # Use 'V1' as a dummy variable name
+        return func_result, upper  # Return the upper bound as the optimal point
+
+    phim1 = (np.sqrt(5) - 1) / 2
+    # ... rest of the function remains unchanged ...
+    """
+    Vectorized golden section search for finding maximum of a function of a
+    single variable.
+
+    Parameters
+    ----------
+    params : dict of numeric
+        Parameters to be passed to `func`. Each entry must be of the same
+        length.
+
+    lower: numeric
+        Lower bound for the optimization. Must be the same length as each
+        entry of params.
+
+    upper: numeric
+        Upper bound for the optimization. Must be the same length as each
+        entry of params.
+
+    func: function
+        Function to be optimized. Must be in the form
+        result = f(dict or DataFrame, str), where result is a dict or DataFrame
+        that also contains the function output, and str is the key
+        corresponding to the function's input variable.
+
+    Returns
+    -------
+    numeric
+        function evaluated at the optimal points
+
+    numeric
+        optimal points
+
+    Notes
+    -----
+    This function will find the points where the function is maximized.
+    Returns nan where lower or upper is nan, or where func evaluates to nan.
+
+    See also
+    --------
+    pvlib.singlediode._pwr_optfcn
+    """
+    if np.any(upper - lower < 0.):
+        raise ValueError('upper >= lower is required')
 
     phim1 = (np.sqrt(5) - 1) / 2
 
